@@ -10,25 +10,35 @@
 HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 {
 	entry = nullptr;
+
+	ByteOccurancesT byteMap = bc.GetByteMap();
+
+	ByteOccurancesT::iterator byteIter = byteMap.begin();
+
+	for( ; byteIter != byteMap.end(); ++byteIter)
+	{
+		HuffmanNode* newEntry = new HuffmanNode();
+		newEntry->c = byteIter->first;
+		newEntry->frequency = byteIter->second;
+		huffmanVector.push_back(newEntry);
+	}
+
+	HuffmanNode* left = GetLowestWeight();
+	HuffmanNode* right = GetLowestWeight();
 }
 
-void HuffmanTree::AddEntry(const char& left, const char& right)
+HuffmanNode* HuffmanTree::GetLowestWeight()
 {
-	HuffmanNode* leftNode = new HuffmanNode();
-	leftNode->c = left;
+	HuffmanNode* retVal = nullptr;
+	uint32_t lowestValue = 0xffffffff;
+	for(unsigned int i = 0; i < huffmanVector.size(); ++i)
+	{
+		if(lowestValue > huffmanVector[i]->frequency)
+		{
+			lowestValue = huffmanVector[i]->frequency;
+			retVal = huffmanVector[i];
+		}
+	}
 
-	HuffmanNode* rightNode = new HuffmanNode();
-	rightNode->c = right;
-
-	HuffmanNode* root = new HuffmanNode();
-
-	root->left = leftNode;
-	root->right = rightNode;
-
-	entry = root;
-}
-
-uint32_t HuffmanTree::GetLevel(const char& byte)
-{
-	return 0;
+	return retVal;
 }

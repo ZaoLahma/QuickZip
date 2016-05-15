@@ -19,7 +19,7 @@ QuickZip::QuickZip()
 const char* QuickZip::Zip(const char* _bytes, uint32_t _size)
 {
 	ByteCounter bc(_bytes, _size);
-	HuffmanTree ht;
+	HuffmanTree ht(bc);
 
 	return nullptr;
 }
