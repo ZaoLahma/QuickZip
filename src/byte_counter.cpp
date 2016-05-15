@@ -35,12 +35,17 @@ size(_size)
 	}
 }
 
-char ByteCounter::GetMostCommonByte()
+uint32_t ByteCounter::GetMostCommonByte(char& mostCommonByte)
 {
 	ByteOccurancesT::iterator byteIter = byteMap.begin();
 
-	char mostCommonByte = 0x0;
+	mostCommonByte = 0x0;
 	uint32_t highestNo = 0;
+
+	if(0 == byteMap.size())
+	{
+		return 0;
+	}
 
 	for(; byteIter != byteMap.end(); ++byteIter)
 	{
@@ -51,7 +56,7 @@ char ByteCounter::GetMostCommonByte()
 		}
 	}
 
-	return mostCommonByte;
+	return 1;
 }
 
 void ByteCounter::RemoveByte(const char& byte)

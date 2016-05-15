@@ -18,7 +18,7 @@ class ByteCounter
 public:
 	ByteCounter(char* _bytes, uint32_t _size);
 
-	char GetMostCommonByte();
+	uint32_t GetMostCommonByte(char& c);
 
 	void RemoveByte(const char&);
 

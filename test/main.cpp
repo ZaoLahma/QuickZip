@@ -6,6 +6,7 @@
  */
 
 #include "byte_counter.h"
+#include "quick_zip.h"
 #include <iostream>
 
 #define ASSERT_EQ(_this, _that) \
@@ -27,11 +28,22 @@ int main(void)
 
 	ByteCounter bc(byteArray, 6);
 
-	ASSERT_EQ(57, bc.GetMostCommonByte());
+	char mostCommonByte;
 
+	bc.GetMostCommonByte(mostCommonByte);
+	ASSERT_EQ(57, mostCommonByte);
 	bc.RemoveByte(57);
 
-	ASSERT_EQ(59, bc.GetMostCommonByte());
+	bc.GetMostCommonByte(mostCommonByte);
+	ASSERT_EQ(59, mostCommonByte);
+	bc.RemoveByte(59);
+
+	bc.GetMostCommonByte(mostCommonByte);
+	ASSERT_EQ(58, mostCommonByte);
+
+	QuickZip qz;
+
+	qz.Zip(byteArray, 6);
 
 	return 0;
 }
