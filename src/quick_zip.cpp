@@ -8,29 +8,18 @@
 #include "quick_zip.h"
 #include "byte_counter.h"
 #include "huffman_tree.h"
+#include <string>
+#include <iostream>
 
 QuickZip::QuickZip()
 {
 
 }
 
-const char* QuickZip::Zip(char* _bytes, uint32_t _size)
+const char* QuickZip::Zip(const char* _bytes, uint32_t _size)
 {
 	ByteCounter bc(_bytes, _size);
 	HuffmanTree ht;
-
-	char mostCommonByte;
-
-	while(0 != bc.GetMostCommonByte(mostCommonByte))
-	{
-		ht.AddEntry(mostCommonByte);
-		bc.RemoveByte(mostCommonByte);
-	}
-
-	for(uint32_t i = 0; i < _size; ++i)
-	{
-		printf("Substitute: 0x%x with %d ones\n", _bytes[i], ht.GetLevel(_bytes[i]));
-	}
 
 	return nullptr;
 }

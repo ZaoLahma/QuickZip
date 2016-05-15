@@ -7,7 +7,7 @@
 
 #include "byte_counter.h"
 
-ByteCounter::ByteCounter(char* _bytes, uint32_t _size) :
+ByteCounter::ByteCounter(const char* _bytes, uint32_t _size) :
 bytes(_bytes),
 size(_size)
 {
@@ -35,36 +35,7 @@ size(_size)
 	}
 }
 
-uint32_t ByteCounter::GetMostCommonByte(char& mostCommonByte)
+ByteOccurancesT ByteCounter::GetByteMap()
 {
-	ByteOccurancesT::iterator byteIter = byteMap.begin();
-
-	mostCommonByte = 0x0;
-	uint32_t highestNo = 0;
-
-	if(0 == byteMap.size())
-	{
-		return 0;
-	}
-
-	for(; byteIter != byteMap.end(); ++byteIter)
-	{
-		if(highestNo < byteIter->second)
-		{
-			highestNo = byteIter->second;
-			mostCommonByte = byteIter->first;
-		}
-	}
-
-	return 1;
-}
-
-void ByteCounter::RemoveByte(const char& byte)
-{
-	ByteOccurancesT::iterator byteIter = byteMap.find(byte);
-
-	if(byteMap.end() != byteIter)
-	{
-		byteMap.erase(byteIter);
-	}
+	return byteMap;
 }

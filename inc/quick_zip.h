@@ -15,7 +15,7 @@ class QuickZip
 public:
 	QuickZip();
 
-	const char* Zip(char* _bytes, uint32_t _size);
+	const char* Zip(const char* _bytes, uint32_t _size);
 
 	const char* Unzip(char* _bytes, uint32_t _size);
 

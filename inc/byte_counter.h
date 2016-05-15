@@ -16,16 +16,14 @@ typedef std::map<char, uint32_t> ByteOccurancesT;
 class ByteCounter
 {
 public:
-	ByteCounter(char* _bytes, uint32_t _size);
+	ByteCounter(const char* _bytes, uint32_t _size);
 
-	uint32_t GetMostCommonByte(char& c);
-
-	void RemoveByte(const char&);
+	ByteOccurancesT GetByteMap();
 
 protected:
 
 private:
-	char* bytes;
+	const char* bytes;
 	uint32_t size;
 
 	ByteOccurancesT byteMap;

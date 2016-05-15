@@ -7,18 +7,28 @@
 
 #include "huffman_tree.h"
 
-HuffmanTree::HuffmanTree() : currentLevel(0)
+HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 {
-
+	entry = nullptr;
 }
 
-void HuffmanTree::AddEntry(const char& byte)
+void HuffmanTree::AddEntry(const char& left, const char& right)
 {
-	map[byte] = currentLevel;
-	currentLevel++;
+	HuffmanNode* leftNode = new HuffmanNode();
+	leftNode->c = left;
+
+	HuffmanNode* rightNode = new HuffmanNode();
+	rightNode->c = right;
+
+	HuffmanNode* root = new HuffmanNode();
+
+	root->left = leftNode;
+	root->right = rightNode;
+
+	entry = root;
 }
 
 uint32_t HuffmanTree::GetLevel(const char& byte)
 {
-	return map.find(byte)->second;
+	return 0;
 }

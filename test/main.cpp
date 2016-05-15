@@ -8,6 +8,7 @@
 #include "byte_counter.h"
 #include "quick_zip.h"
 #include <iostream>
+#include <string>
 
 #define ASSERT_EQ(_this, _that) \
 if(_this != _that) \
@@ -18,32 +19,9 @@ if(_this != _that) \
 
 int main(void)
 {
-	char* byteArray = new char[6];
-	byteArray[0] = 57;
-	byteArray[1] = 58;
-	byteArray[2] = 59;
-	byteArray[3] = 59;
-	byteArray[4] = 57;
-	byteArray[5] = 57;
+	std::string byteArray = "eebbeecdebeeebecceeeddebbbeceedebeeddeeeecceeeedeeedeeebeedeceedebeeedeceeedebee";
 
-	ByteCounter bc(byteArray, 6);
-
-	char mostCommonByte;
-
-	bc.GetMostCommonByte(mostCommonByte);
-	ASSERT_EQ(57, mostCommonByte);
-	bc.RemoveByte(57);
-
-	bc.GetMostCommonByte(mostCommonByte);
-	ASSERT_EQ(59, mostCommonByte);
-	bc.RemoveByte(59);
-
-	bc.GetMostCommonByte(mostCommonByte);
-	ASSERT_EQ(58, mostCommonByte);
-
-	QuickZip qz;
-
-	qz.Zip(byteArray, 6);
+	ByteCounter bc(byteArray.c_str(), byteArray.length());
 
 	return 0;
 }
