@@ -9,11 +9,18 @@
 #define INC_BYTE_COUNTER_H_
 
 #include <cstdint>
+#include <map>
+
+typedef std::map<char, uint32_t> ByteOccurancesT;
 
 class ByteCounter
 {
 public:
 	ByteCounter(char* _bytes, uint32_t _size);
+
+	char GetMostCommonByte();
+
+	void RemoveByte(const char&);
 
 protected:
 
@@ -21,6 +28,7 @@ private:
 	char* bytes;
 	uint32_t size;
 
+	ByteOccurancesT byteMap;
 };
 
 
