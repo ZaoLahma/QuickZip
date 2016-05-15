@@ -32,7 +32,7 @@ protected:
 private:
 	HuffmanTree();
 	HuffmanNode* entry;
-	ByteCounter bc;
+	ByteCounter& bc;
 
 	HuffmanVectorT huffmanVector;
 

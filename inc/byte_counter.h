@@ -18,7 +18,7 @@ class ByteCounter
 public:
 	ByteCounter(const char* _bytes, uint32_t _size);
 
-	ByteOccurancesT GetByteMap();
+	ByteOccurancesT& GetByteMap();
 
 protected:
 

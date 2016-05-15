@@ -23,5 +23,8 @@ int main(void)
 
 	ByteCounter bc(byteArray.c_str(), byteArray.length());
 
+	QuickZip qz;
+	qz.Zip(byteArray.c_str(), byteArray.length());
+
 	return 0;
 }
