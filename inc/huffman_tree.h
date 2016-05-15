@@ -10,11 +10,13 @@
 
 #include <map>
 #include <vector>
+#include <string>
 #include "byte_counter.h"
 
 struct HuffmanNode
 {
 	char c;
+	std::string code;
 	uint32_t frequency;
 	HuffmanNode* left = nullptr;
 	HuffmanNode* right = nullptr;
@@ -36,6 +38,7 @@ private:
 
 	HuffmanVectorT huffmanVector;
 
+	void GenerateBitCodes();
 	HuffmanNode* GetLowestWeight();
 };
 

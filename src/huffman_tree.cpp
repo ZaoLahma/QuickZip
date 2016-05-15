@@ -44,6 +44,12 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 	entry = huffmanVector[0];
 }
 
+void HuffmanTree::GenerateBitCodes()
+{
+	std::string rightVal;
+	std::string leftVal;
+}
+
 HuffmanNode* HuffmanTree::GetLowestWeight()
 {
 	HuffmanNode* retVal = nullptr;
