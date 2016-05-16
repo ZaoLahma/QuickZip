@@ -21,15 +21,23 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 {
 	printf("Original bit size: %d\n", _size * 8);
 
-	//Get frequencies of the different bytes
+	/*
+	 * Get frequencies of the different bytes
+	 */
 	ByteCounter bc(_bytes, _size);
 
-	//Construct a Huffman Tree
+	/*
+	 * Construct a Huffman Tree
+	 */
 	HuffmanTree ht(bc);
 
 	uint32_t bitSize = 0;
 
-	//Get a string representation of the bit pattern for each byte
+	/*
+	 * Get the total size of the coded bit array
+	 * by counting the bits needed for each
+	 * byte.
+	 */
 	std::string code;
 	for(unsigned int i = 0; i < _size; ++i)
 	{
@@ -39,17 +47,22 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		bitSize += code.length();
 	}
 
+	/*
+	 * Byte align the bit size
+	 */
 	printf("Bit size: %d\n", bitSize);
-
 	while(bitSize % 8 != 0)
 	{
 		bitSize += 1;
 	}
-
 	printf("Byte aligned bit size: %d\n", bitSize);
-
 	uint32_t byteSize = bitSize / 8;
 
+	/*
+	 * Finally encode the byte array to a bit
+	 * array as defined by the constructed
+	 * Huffman Tree
+	 */
 	char* byteBuffer = new char[byteSize];
 	uint32_t byteOffset = 0;
 	uint32_t bitNo = 0;
@@ -77,13 +90,6 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		}
 	}
 
-	/*
-	for(unsigned int i = 0; i < bitSize; ++i)
-	{
-		printf("%c\n", GetBit(byteBuffer, i));
-	}
-	*/
-
 	ByteContainer retVal;
 	retVal.buffer = byteBuffer;
 	retVal.size = byteSize;
@@ -97,6 +103,4 @@ void QuickZip::SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val)
 
 	uint8_t* intPtr = (uint8_t*)(_byteBuffer);
 	*intPtr |= _val << _bitNo;
-
-	//printf("*intPtr: %d\n", *intPtr);
 }

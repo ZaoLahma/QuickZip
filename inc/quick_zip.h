@@ -16,6 +16,16 @@ struct ByteContainer
 	char* buffer;
 };
 
+/*
+ * QuickZip - A byte compression class
+ * using Huffman Coding as compression
+ * algorithm.
+ *
+ * Still not implemented:
+ * 	- Encoding of the byte to bit table
+ * 	- Decoding an encoded bit array, obviously
+ */
+
 class QuickZip
 {
 public:

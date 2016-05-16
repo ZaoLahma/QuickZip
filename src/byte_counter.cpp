@@ -28,11 +28,6 @@ size(_size)
 	}
 
 	byteIter = byteMap.begin();
-
-	for(; byteIter != byteMap.end(); ++byteIter)
-	{
-		printf("byte: 0x%x, no: %d\n", byteIter->first, byteIter->second);
-	}
 }
 
 ByteOccurancesT& ByteCounter::GetByteMap()
