@@ -10,20 +10,23 @@
 
 #include <cstdint>
 
+struct ByteContainer
+{
+	uint32_t size;
+	char* buffer;
+};
+
 class QuickZip
 {
 public:
 	QuickZip();
 
-	const char* Zip(const char* _bytes, uint32_t _size);
-
-	const char* Unzip(char* _bytes, uint32_t _size);
+	ByteContainer Zip(const char* _bytes, uint32_t _size);
 
 protected:
 
 private:
 	void SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val);
-	char GetBit(char* _byteBuffer, uint32_t _bitNo);
 };
 
 

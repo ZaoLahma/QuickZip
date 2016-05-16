@@ -17,7 +17,7 @@ QuickZip::QuickZip()
 
 }
 
-const char* QuickZip::Zip(const char* _bytes, uint32_t _size)
+ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 {
 	printf("Original bit size: %d\n", _size * 8);
 
@@ -84,26 +84,19 @@ const char* QuickZip::Zip(const char* _bytes, uint32_t _size)
 	}
 	*/
 
-	return byteBuffer;
-}
+	ByteContainer retVal;
+	retVal.buffer = byteBuffer;
+	retVal.size = byteSize;
 
-const char* QuickZip::Unzip(char* _bytes, uint32_t _size)
-{
-	return nullptr;
+	return retVal;
 }
 
 void QuickZip::SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val)
 {
-	printf("Setting bit: %d in 0x%x to: %d\n", _bitNo, _byteBuffer, _val);
+	printf("Setting bit: %d in %p to: %d\n", _bitNo, _byteBuffer, _val);
 
 	uint8_t* intPtr = (uint8_t*)(_byteBuffer);
 	*intPtr |= _val << _bitNo;
 
-	printf("*intPtr: %d\n", *intPtr);
-}
-
-char QuickZip::GetBit(char* _byteBuffer, uint32_t _bitNo)
-{
-	//Implement me
-	return '0';
+	//printf("*intPtr: %d\n", *intPtr);
 }

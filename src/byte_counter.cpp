@@ -37,6 +37,5 @@ size(_size)
 
 ByteOccurancesT& ByteCounter::GetByteMap()
 {
-	printf("GetByteMap called. byteMap.size(): %u\n", byteMap.size());
 	return byteMap;
 }

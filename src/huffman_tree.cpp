@@ -15,6 +15,7 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 	 * Construct a Huffman Node (leaf) for
 	 * all characters.
 	 */
+	HuffmanVectorT huffmanVector;
 	ByteOccurancesT& byteMap = bc.GetByteMap();
 	ByteOccurancesT::iterator byteIter = byteMap.begin();
 	for( ; byteIter != byteMap.end(); ++byteIter)
@@ -26,6 +27,8 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 		newEntry->left = nullptr;
 		huffmanVector.push_back(newEntry);
 	}
+
+	huffmanNodeStorage = huffmanVector;
 
 
 	/*
@@ -45,8 +48,8 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 	 */
 	while(huffmanVector.size() > 1)
 	{
-		HuffmanNode* right = GetLowestWeight();
-		HuffmanNode* left = GetLowestWeight();
+		HuffmanNode* right = GetLowestWeight(huffmanVector);
+		HuffmanNode* left = GetLowestWeight(huffmanVector);
 
 		HuffmanNode* rootItem = new HuffmanNode();
 		rootItem->frequency = left->frequency + right->frequency;
@@ -56,9 +59,20 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 		printf("left: %d, right: %d\n", left->frequency, right->frequency);
 
 		huffmanVector.push_back(rootItem);
+		huffmanNodeStorage.push_back(rootItem);
 	}
 
 	entry = huffmanVector[0];
+}
+
+HuffmanTree::~HuffmanTree()
+{
+	for(unsigned int i = 0; i < huffmanNodeStorage.size(); ++i)
+	{
+		delete huffmanNodeStorage[i];
+	}
+
+	huffmanNodeStorage.clear();
 }
 
 bool HuffmanTree::GetBitCode(const char& searchPattern, std::string& code)
@@ -120,7 +134,7 @@ bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint,
 	}
 }
 
-HuffmanNode* HuffmanTree::GetLowestWeight()
+HuffmanNode* HuffmanTree::GetLowestWeight(HuffmanVectorT& huffmanVector)
 {
 	/*
 	 * Help function for constructing the Huffman Tree.
