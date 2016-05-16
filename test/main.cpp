@@ -28,7 +28,7 @@ int main(void)
 
 	ASSERT_EQ(17, retVal.size);
 
-	delete retVal.buffer;
+	delete[] retVal.buffer;
 
 	return 0;
 }
