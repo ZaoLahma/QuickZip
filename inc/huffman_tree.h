@@ -29,6 +29,8 @@ class HuffmanTree
 public:
 	HuffmanTree(ByteCounter& _bc);
 
+	bool GetBitCode(const char& searchPatter, std::string& code);
+
 protected:
 
 private:
@@ -38,7 +40,7 @@ private:
 
 	HuffmanVectorT huffmanVector;
 
-	void GenerateBitCodes();
+	bool GetBitCode(const char& searchPattern, HuffmanNode* entryPoint, std::string& code);
 	HuffmanNode* GetLowestWeight();
 };
 
