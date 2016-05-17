@@ -7,7 +7,7 @@
 
 #include "huffman_tree.h"
 
-HuffmanTree::HuffmanTree(HuffmanVectorT& _huffmanVector)
+HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 {
 	entry = nullptr;
 

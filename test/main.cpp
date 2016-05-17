@@ -26,7 +26,7 @@ int main(void)
 	QuickZip qz;
 	ByteContainer retVal = qz.Zip(byteArray.c_str(), byteArray.length());
 
-	ASSERT_EQ(17, retVal.size);
+	ASSERT_EQ(19, retVal.size);
 
 	delete[] retVal.buffer;
 

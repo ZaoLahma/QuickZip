@@ -27,13 +27,23 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	ByteCounter bc(_bytes, _size);
 
 	/*
-	 * Construct a Huffman Tree
+	 * Calculate the size needed for all characters
 	 */
+	uint32_t bitSize = 0;
+
 	HuffmanVectorT huffmanVector = bc.GetHuffmanNodes();
 
-	HuffmanTree ht(huffmanVector);
+	HuffmanVectorT::iterator huffIter = huffmanVector.begin();
 
-	uint32_t bitSize = 0;
+	for(; huffIter != huffmanVector.end(); ++huffIter)
+	{
+		bitSize += 40;
+	}
+
+	/*
+	 * Construct a Huffman Tree
+	 */
+	HuffmanTree ht(huffmanVector);
 
 	/*
 	 * Get the total size of the coded bit array
@@ -62,12 +72,33 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	uint32_t byteSize = bitSize / 8;
 
 	/*
+	 * Allocate memory and encode the byte to
+	 * bit table
+	 */
+	char* byteBuffer = new char[byteSize];
+	uint32_t byteOffset = 0;
+
+	huffIter = huffmanVector.begin();
+
+	for(; huffIter != huffmanVector.end(); ++huffIter)
+	{
+		byteBuffer[byteOffset] = (*huffIter)->c;
+		byteOffset++;
+
+		uint32_t* frequency = (uint32_t*)(&byteBuffer[byteOffset]);
+		*frequency = (*huffIter)->frequency;
+		byteOffset += sizeof(uint32_t);
+
+		printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
+	}
+
+	printf("Byte offset: %d\n", byteOffset);
+
+	/*
 	 * Finally encode the byte array to a bit
 	 * array as defined by the constructed
 	 * Huffman Tree
 	 */
-	char* byteBuffer = new char[byteSize];
-	uint32_t byteOffset = 0;
 	uint32_t bitNo = 0;
 	for(unsigned int i = 0; i < _size; ++i)
 	{
@@ -92,6 +123,8 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 			}
 		}
 	}
+
+	printf("Byte offset at end of coding: %d\n", byteOffset);
 
 	ByteContainer retVal;
 	retVal.buffer = byteBuffer;
