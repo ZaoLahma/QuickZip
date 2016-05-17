@@ -29,6 +29,8 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset)
 		HuffmanNode* currentNode = new HuffmanNode();
 		currentByte = &_encoudedBuffer[_byteOffset];
 		currentNode->c = *currentByte;
+		currentNode->left = nullptr;
+		currentNode->right = nullptr;
 		_byteOffset++;
 		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[_byteOffset]);
 		currentNode->frequency = *intPtr;
@@ -44,6 +46,8 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset)
 	huffmanNodeStorage = huffmanVector;
 
 	BuildHuffmanTree(huffmanVector);
+
+	entry = huffmanVector[0];
 }
 
 void HuffmanTree::BuildHuffmanTree(HuffmanVectorT& _huffmanVector)
@@ -73,7 +77,8 @@ void HuffmanTree::BuildHuffmanTree(HuffmanVectorT& _huffmanVector)
 		rootItem->left = left;
 		rootItem->right = right;
 
-		printf("left: %d, right: %d\n", left->frequency, right->frequency);
+		printf("left: %c (%d), right: %c (%d)\n", left->c, left->frequency,
+												  right->c, right->frequency);
 
 		_huffmanVector.push_back(rootItem);
 		huffmanNodeStorage.push_back(rootItem);
@@ -90,7 +95,7 @@ HuffmanTree::~HuffmanTree()
 	huffmanNodeStorage.clear();
 }
 
-HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, std::string& code)
+HuffmanNode* HuffmanTree::FindByteInTreeTree(const char& searchPattern, std::string& code)
 {
 	return SearchHuffmanTree(searchPattern, entry, code);
 }
@@ -147,6 +152,24 @@ HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNo
 		}
 		return retVal;
 	}
+}
+
+HuffmanNode* HuffmanTree::FindByteFromBitCode(const std::string& code)
+{
+	HuffmanNode* retVal = entry;
+	for(unsigned int i = 0; i < code.length(); ++i)
+	{
+		if('0' == code.at(i))
+		{
+			retVal = retVal->left;
+		}
+		else
+		{
+			retVal = retVal->right;
+		}
+	}
+
+	return retVal;
 }
 
 HuffmanNode* HuffmanTree::GetLowestWeight(HuffmanVectorT& huffmanVector)

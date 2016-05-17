@@ -19,7 +19,9 @@ public:
 	HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset);
 	~HuffmanTree();
 
-	HuffmanNode* SearchHuffmanTree(const char& searchPatter, std::string& code);
+	HuffmanNode* FindByteInTreeTree(const char& searchPattern, std::string& code);
+
+	HuffmanNode* FindByteFromBitCode(const std::string& code);
 
 protected:
 

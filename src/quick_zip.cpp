@@ -39,7 +39,8 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	{
 		bitSize += 40;
 	}
-	bitSize += 8;
+	bitSize += 8; //For null termination
+	bitSize += 32; //For bitSize
 
 	/*
 	 * Construct a Huffman Tree
@@ -53,24 +54,27 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 */
 
 	std::string code;
+	uint32_t payloadBitSize = 0;
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.SearchHuffmanTree(_bytes[i], code);
+		ht.FindByteInTreeTree(_bytes[i], code);
 		printf("%c, got code %s\n", _bytes[i], code.c_str());
 		bitSize += code.length();
+		payloadBitSize += code.length();
 	}
 
 	/*
 	 * Byte align the bit size
 	 */
 	printf("Bit size: %d\n", bitSize);
-	while(bitSize % 8 != 0)
+	uint32_t byteAlignedBitSize = bitSize;
+	while(byteAlignedBitSize % 8 != 0)
 	{
-		bitSize += 1;
+		byteAlignedBitSize += 1;
 	}
-	printf("Byte aligned bit size: %d\n", bitSize);
-	uint32_t byteSize = bitSize / 8;
+	printf("Byte aligned bit size: %d\n", byteAlignedBitSize);
+	uint32_t byteSize = byteAlignedBitSize / 8;
 
 	/*
 	 * Allocate memory and encode the byte to
@@ -96,6 +100,14 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	byteBuffer[byteOffset] = '\0';
 	byteOffset++;
 
+	/*
+	 * Encode bitSize
+	 */
+	uint32_t* bitSizePtr = (uint32_t*)(&byteBuffer[byteOffset]);
+	*bitSizePtr = payloadBitSize;
+	byteOffset += 4;
+
+
 	printf("Byte offset: %d\n", byteOffset);
 
 	/*
@@ -107,7 +119,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.SearchHuffmanTree(_bytes[i], code);
+		ht.FindByteInTreeTree(_bytes[i], code);
 
 		for(unsigned int n = 0; n < code.length(); ++n)
 		{
@@ -144,19 +156,48 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 
 	printf("Byte offset: %d\n", byteOffset);
 
-	for(unsigned int i = byteOffset; i < _size; ++i)
+	uint32_t bitSize = *(uint32_t*)(&_bytes[byteOffset]);
+
+	printf("Bit size: %d\n", bitSize);
+
+	byteOffset += 4;
+
+	std::string code = "";
+	uint32_t byteSize = 0;
+	uint32_t noOfHandledBits = 0;
+
+	std::string decodedbytes = "";
+
+	for(unsigned int i = byteOffset; i < _size && noOfHandledBits != bitSize; ++i)
 	{
-		for(unsigned int n = 0; n < 8; ++n)
+		for(unsigned int n = 0; n < 8 && noOfHandledBits != bitSize; ++n)
 		{
+			noOfHandledBits++;
 			char bit = GetBitInByte(&_bytes[i], n);
-			printf("Bit: %c\n", bit);
+			code += bit;
+
+			HuffmanNode* node = ht.FindByteFromBitCode(code);
+
+			if(nullptr == node->left && nullptr == node->right)
+			{
+				code.clear();
+				byteSize++;
+				printf("Decoded: %c\n", node->c);
+				decodedbytes += node->c;
+			}
 		}
 	}
 
+	printf("Byte size: %d\n", byteSize);
+
+	char* byteBuffer = new char[byteSize];
+
+	memcpy(byteBuffer, decodedbytes.c_str(), decodedbytes.length());
+
 
 	ByteContainer retVal;
-	retVal.buffer = nullptr;
-	retVal.size = 0;
+	retVal.buffer = byteBuffer;
+	retVal.size = byteSize;
 
 	return retVal;
 }

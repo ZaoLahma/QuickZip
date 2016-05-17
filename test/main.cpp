@@ -26,9 +26,16 @@ int main(void)
 	QuickZip qz;
 	ByteContainer zipped = qz.Zip(byteArray.c_str(), byteArray.length());
 
-	ASSERT_EQ(38, zipped.size);
+	ASSERT_EQ(42, zipped.size);
 
 	ByteContainer unzipped = qz.Unzip(zipped.buffer, zipped.size);
+
+	ASSERT_EQ(unzipped.size, byteArray.length());
+
+	for(uint32_t i = 0; i < byteArray.length(); ++i)
+	{
+		ASSERT_EQ(byteArray.at(i), unzipped.buffer[i])
+	}
 
 	delete[] zipped.buffer;
 	delete[] unzipped.buffer;
