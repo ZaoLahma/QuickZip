@@ -9,9 +9,7 @@
 #define INC_BYTE_COUNTER_H_
 
 #include <cstdint>
-#include <map>
-
-typedef std::map<char, uint32_t> ByteOccurancesT;
+#include "quick_zip_types.h"
 
 class ByteCounter
 {
@@ -19,6 +17,8 @@ public:
 	ByteCounter(const char* _bytes, uint32_t _size);
 
 	ByteOccurancesT& GetByteMap();
+
+	HuffmanVectorT GetHuffmanNodes();
 
 protected:
 

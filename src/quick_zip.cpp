@@ -29,7 +29,9 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	/*
 	 * Construct a Huffman Tree
 	 */
-	HuffmanTree ht(bc);
+	HuffmanVectorT huffmanVector = bc.GetHuffmanNodes();
+
+	HuffmanTree ht(huffmanVector);
 
 	uint32_t bitSize = 0;
 
@@ -38,11 +40,12 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 * by counting the bits needed for each
 	 * byte.
 	 */
+
 	std::string code;
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.GetBitCode(_bytes[i], code);
+		ht.SearchHuffmanTree(_bytes[i], code);
 		printf("%c, got code %s\n", _bytes[i], code.c_str());
 		bitSize += code.length();
 	}
@@ -69,7 +72,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.GetBitCode(_bytes[i], code);
+		ht.SearchHuffmanTree(_bytes[i], code);
 
 		for(unsigned int n = 0; n < code.length(); ++n)
 		{

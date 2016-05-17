@@ -7,29 +7,11 @@
 
 #include "huffman_tree.h"
 
-HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
+HuffmanTree::HuffmanTree(HuffmanVectorT& _huffmanVector)
 {
 	entry = nullptr;
 
-	/*
-	 * Construct a Huffman Node (leaf) for
-	 * all characters.
-	 */
-	HuffmanVectorT huffmanVector;
-	ByteOccurancesT& byteMap = bc.GetByteMap();
-	ByteOccurancesT::iterator byteIter = byteMap.begin();
-	for( ; byteIter != byteMap.end(); ++byteIter)
-	{
-		HuffmanNode* newEntry = new HuffmanNode();
-		newEntry->c = byteIter->first;
-		newEntry->frequency = byteIter->second;
-		newEntry->right = nullptr;
-		newEntry->left = nullptr;
-		huffmanVector.push_back(newEntry);
-	}
-
-	huffmanNodeStorage = huffmanVector;
-
+	huffmanNodeStorage = _huffmanVector;
 
 	/*
 	 * Build the Huffman Tree using the following algorithm:
@@ -46,10 +28,10 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 	 * Repeat until only one element remains in the list of leaves.
 	 * This will be the entry point to the Huffman Tree.
 	 */
-	while(huffmanVector.size() > 1)
+	while(_huffmanVector.size() > 1)
 	{
-		HuffmanNode* right = GetLowestWeight(huffmanVector);
-		HuffmanNode* left = GetLowestWeight(huffmanVector);
+		HuffmanNode* right = GetLowestWeight(_huffmanVector);
+		HuffmanNode* left = GetLowestWeight(_huffmanVector);
 
 		HuffmanNode* rootItem = new HuffmanNode();
 		rootItem->frequency = left->frequency + right->frequency;
@@ -58,11 +40,11 @@ HuffmanTree::HuffmanTree(ByteCounter& _bc) : bc(_bc)
 
 		printf("left: %d, right: %d\n", left->frequency, right->frequency);
 
-		huffmanVector.push_back(rootItem);
+		_huffmanVector.push_back(rootItem);
 		huffmanNodeStorage.push_back(rootItem);
 	}
 
-	entry = huffmanVector[0];
+	entry = _huffmanVector[0];
 }
 
 HuffmanTree::~HuffmanTree()
@@ -75,12 +57,12 @@ HuffmanTree::~HuffmanTree()
 	huffmanNodeStorage.clear();
 }
 
-bool HuffmanTree::GetBitCode(const char& searchPattern, std::string& code)
+HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, std::string& code)
 {
-	return GetBitCode(searchPattern, entry, code);
+	return SearchHuffmanTree(searchPattern, entry, code);
 }
 
-bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint, std::string& code)
+HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNode* entryPoint, std::string& code)
 {
 	/*
 	 * This function performs a recursive search down through the
@@ -91,7 +73,7 @@ bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint,
 
 	if(entryPoint == nullptr)
 	{
-		return false;
+		return nullptr;
 	}
 
 	if(entryPoint->left == nullptr && entryPoint->right == nullptr)
@@ -101,11 +83,11 @@ bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint,
 		 */
 		if(entryPoint->c == searchPattern)
 		{
-			return true;
+			return entryPoint;
 		}
 		else
 		{
-			return false;
+			return nullptr;
 		}
 	}
 	else
@@ -114,8 +96,8 @@ bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint,
 		 * Continue searching down the tree.
 		 */
 		std::string tmpString;
-		bool retVal = GetBitCode(searchPattern, entryPoint->left, tmpString);
-		if(retVal)
+		HuffmanNode* retVal = SearchHuffmanTree(searchPattern, entryPoint->left, tmpString);
+		if(nullptr != retVal)
 		{
 			code += "0";
 			code += tmpString;
@@ -123,8 +105,8 @@ bool HuffmanTree::GetBitCode(const char& searchPattern, HuffmanNode* entryPoint,
 		else
 		{
 			tmpString.clear();
-			retVal = GetBitCode(searchPattern, entryPoint->right, tmpString);
-			if(retVal)
+			retVal = SearchHuffmanTree(searchPattern, entryPoint->right, tmpString);
+			if(nullptr != retVal)
 			{
 				code += "1";
 				code += tmpString;

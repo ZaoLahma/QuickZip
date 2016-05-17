@@ -34,3 +34,21 @@ ByteOccurancesT& ByteCounter::GetByteMap()
 {
 	return byteMap;
 }
+
+HuffmanVectorT ByteCounter::GetHuffmanNodes()
+{
+	HuffmanVectorT huffmanVector;
+
+	ByteOccurancesT::iterator byteIter = byteMap.begin();
+	for( ; byteIter != byteMap.end(); ++byteIter)
+	{
+		HuffmanNode* newEntry = new HuffmanNode();
+		newEntry->c = byteIter->first;
+		newEntry->frequency = byteIter->second;
+		newEntry->right = nullptr;
+		newEntry->left = nullptr;
+		huffmanVector.push_back(newEntry);
+	}
+
+	return huffmanVector;
+}
