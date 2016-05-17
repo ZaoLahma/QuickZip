@@ -18,8 +18,18 @@ HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 	entry = _huffmanVector[0];
 }
 
-HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset)
+HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset, uint32_t& _decodedSize)
 {
+	/*
+	 * Create Huffman Tree from coded bit array.
+	 * Format:
+	 * char followed by 32 bit integer with its
+	 * frequency in the uncoded source.
+	 *
+	 * The sum of all frequencies gives the decoded
+	 * size.
+	 */
+
 	HuffmanVectorT huffmanVector;
 
 	const char* currentByte = _encoudedBuffer;
@@ -31,9 +41,11 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset)
 		currentNode->c = *currentByte;
 		currentNode->left = nullptr;
 		currentNode->right = nullptr;
+
 		_byteOffset++;
 		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[_byteOffset]);
 		currentNode->frequency = *intPtr;
+		_decodedSize += currentNode->frequency;
 
 		huffmanVector.push_back(currentNode);
 
@@ -167,6 +179,14 @@ HuffmanNode* HuffmanTree::FindByteFromBitCode(const std::string& code)
 		{
 			retVal = retVal->right;
 		}
+	}
+
+	if(retVal->left != nullptr && retVal->right != nullptr)
+	{
+		/*
+		 * No match for provided code. Return nullptr
+		 */
+		retVal = nullptr;
 	}
 
 	return retVal;

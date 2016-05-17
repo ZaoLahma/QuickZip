@@ -151,24 +151,27 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 
 ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 {
-	uint32_t byteOffset = 0;
-	HuffmanTree ht(_bytes, byteOffset);
+	uint32_t startByteOffset = 0;
+	uint32_t decodedSize = 0;
+	HuffmanTree ht(_bytes, startByteOffset, decodedSize);
 
-	printf("Byte offset: %d\n", byteOffset);
+	printf("Byte offset: %d, decoded size: %d\n", startByteOffset, decodedSize);
 
-	uint32_t bitSize = *(uint32_t*)(&_bytes[byteOffset]);
+	uint32_t bitSize = *(uint32_t*)(&_bytes[startByteOffset]);
 
 	printf("Bit size: %d\n", bitSize);
 
-	byteOffset += 4;
+	startByteOffset += 4;
 
+
+	/*
+	 * Decode bit array bit by bit.
+	 */
+	char* byteBuffer = new char[decodedSize];
+	uint32_t byteOffset = 0;
 	std::string code = "";
-	uint32_t byteSize = 0;
 	uint32_t noOfHandledBits = 0;
-
-	std::string decodedbytes = "";
-
-	for(unsigned int i = byteOffset; i < _size && noOfHandledBits != bitSize; ++i)
+	for(unsigned int i = startByteOffset; i < _size && noOfHandledBits != bitSize; ++i)
 	{
 		for(unsigned int n = 0; n < 8 && noOfHandledBits != bitSize; ++n)
 		{
@@ -178,26 +181,21 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 
 			HuffmanNode* node = ht.FindByteFromBitCode(code);
 
-			if(nullptr == node->left && nullptr == node->right)
+			if(nullptr != node)
 			{
+				/*
+				 * Provided code gave a match
+				 */
 				code.clear();
-				byteSize++;
 				printf("Decoded: %c\n", node->c);
-				decodedbytes += node->c;
+				byteBuffer[byteOffset] = node->c;
+				byteOffset++;
 			}
 		}
 	}
-
-	printf("Byte size: %d\n", byteSize);
-
-	char* byteBuffer = new char[byteSize];
-
-	memcpy(byteBuffer, decodedbytes.c_str(), decodedbytes.length());
-
-
 	ByteContainer retVal;
 	retVal.buffer = byteBuffer;
-	retVal.size = byteSize;
+	retVal.size = decodedSize;
 
 	return retVal;
 }

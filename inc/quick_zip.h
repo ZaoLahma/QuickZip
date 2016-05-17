@@ -21,9 +21,17 @@ struct ByteContainer
  * using Huffman Coding as compression
  * algorithm.
  *
- * Still not implemented:
- * 	- Encoding of the byte to bit table
- * 	- Decoding an encoded bit array, obviously
+ * Coded bit array format:
+ * 0 - N bits: Table of all char (8 bits) followed by
+ * 			   their frequency (32 bits) used to rebuild
+ * 			   Huffman Tree at decode
+ *
+ * N + 8 bits: Null termination to mark end of table
+ *
+ * N + 16 bits: 32 bit integer with how many bits the
+ * 				coded bit array is
+ *
+ * N + 48 bits: Payload/coded bit array
  */
 
 class QuickZip
