@@ -39,6 +39,8 @@ protected:
 
 private:
 	void SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val);
+
+	char GetBitInByte(const char* _byteBuffer, uint32_t _bitNo);
 };
 
 

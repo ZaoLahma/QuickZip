@@ -139,7 +139,20 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 
 ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 {
-	HuffmanTree ht(_bytes);
+	uint32_t byteOffset = 0;
+	HuffmanTree ht(_bytes, byteOffset);
+
+	printf("Byte offset: %d\n", byteOffset);
+
+	for(unsigned int i = byteOffset; i < _size; ++i)
+	{
+		for(unsigned int n = 0; n < 8; ++n)
+		{
+			char bit = GetBitInByte(&_bytes[i], n);
+			printf("Bit: %c\n", bit);
+		}
+	}
+
 
 	ByteContainer retVal;
 	retVal.buffer = nullptr;
@@ -154,4 +167,18 @@ void QuickZip::SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val)
 
 	uint8_t* intPtr = (uint8_t*)(_byteBuffer);
 	*intPtr |= _val << _bitNo;
+}
+
+char QuickZip::GetBitInByte(const char* _byteBuffer, uint32_t _bitNo)
+{
+	uint8_t intToCheck = *((uint8_t*)(_byteBuffer));
+
+	intToCheck = intToCheck & (1 << _bitNo);
+
+	if(intToCheck == 0)
+	{
+		return '0';
+	}
+
+	return '1';
 }

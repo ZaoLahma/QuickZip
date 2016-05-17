@@ -16,7 +16,7 @@ class HuffmanTree
 {
 public:
 	HuffmanTree(HuffmanVectorT _huffmanVector);
-	HuffmanTree(const char* _encodedBuffer);
+	HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset);
 	~HuffmanTree();
 
 	HuffmanNode* SearchHuffmanTree(const char& searchPatter, std::string& code);

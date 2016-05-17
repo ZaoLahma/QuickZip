@@ -18,26 +18,28 @@ HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 	entry = _huffmanVector[0];
 }
 
-HuffmanTree::HuffmanTree(const char* _encoudedBuffer)
+HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset)
 {
 	HuffmanVectorT huffmanVector;
 
 	const char* currentByte = _encoudedBuffer;
-	uint32_t byteOffset = 0;
+	_byteOffset = 0;
 	while('\0' != *currentByte)
 	{
 		HuffmanNode* currentNode = new HuffmanNode();
-		currentByte = &_encoudedBuffer[byteOffset];
+		currentByte = &_encoudedBuffer[_byteOffset];
 		currentNode->c = *currentByte;
-		byteOffset++;
-		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[byteOffset]);
+		_byteOffset++;
+		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[_byteOffset]);
 		currentNode->frequency = *intPtr;
 
 		huffmanVector.push_back(currentNode);
 
-		byteOffset += sizeof(uint32_t);
-		currentByte = &_encoudedBuffer[byteOffset];
+		_byteOffset += sizeof(uint32_t);
+		currentByte = &_encoudedBuffer[_byteOffset];
 	}
+
+	_byteOffset++;
 
 	huffmanNodeStorage = huffmanVector;
 
