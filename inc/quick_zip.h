@@ -28,10 +28,7 @@ struct ByteContainer
  *
  * N + 8 bits: Null termination to mark end of table
  *
- * N + 16 bits: 32 bit integer with how many bits the
- * 				coded bit array is
- *
- * N + 48 bits: Payload/coded bit array
+ * N + 16 bits: Payload/coded bit array
  */
 
 class QuickZip
