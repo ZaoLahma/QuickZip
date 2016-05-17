@@ -13,6 +13,39 @@ HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 
 	huffmanNodeStorage = _huffmanVector;
 
+	BuildHuffmanTree(_huffmanVector);
+
+	entry = _huffmanVector[0];
+}
+
+HuffmanTree::HuffmanTree(const char* _encoudedBuffer)
+{
+	HuffmanVectorT huffmanVector;
+
+	const char* currentByte = _encoudedBuffer;
+	uint32_t byteOffset = 0;
+	while('\0' != *currentByte)
+	{
+		HuffmanNode* currentNode = new HuffmanNode();
+		currentByte = &_encoudedBuffer[byteOffset];
+		currentNode->c = *currentByte;
+		byteOffset++;
+		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[byteOffset]);
+		currentNode->frequency = *intPtr;
+
+		huffmanVector.push_back(currentNode);
+
+		byteOffset += sizeof(uint32_t);
+		currentByte = &_encoudedBuffer[byteOffset];
+	}
+
+	huffmanNodeStorage = huffmanVector;
+
+	BuildHuffmanTree(huffmanVector);
+}
+
+void HuffmanTree::BuildHuffmanTree(HuffmanVectorT& _huffmanVector)
+{
 	/*
 	 * Build the Huffman Tree using the following algorithm:
 	 *
@@ -43,8 +76,6 @@ HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 		_huffmanVector.push_back(rootItem);
 		huffmanNodeStorage.push_back(rootItem);
 	}
-
-	entry = _huffmanVector[0];
 }
 
 HuffmanTree::~HuffmanTree()

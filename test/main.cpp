@@ -24,11 +24,14 @@ int main(void)
 	ByteCounter bc(byteArray.c_str(), byteArray.length());
 
 	QuickZip qz;
-	ByteContainer retVal = qz.Zip(byteArray.c_str(), byteArray.length());
+	ByteContainer zipped = qz.Zip(byteArray.c_str(), byteArray.length());
 
-	ASSERT_EQ(19, retVal.size);
+	ASSERT_EQ(38, zipped.size);
 
-	delete[] retVal.buffer;
+	ByteContainer unzipped = qz.Unzip(zipped.buffer, zipped.size);
+
+	delete[] zipped.buffer;
+	delete[] unzipped.buffer;
 
 	return 0;
 }

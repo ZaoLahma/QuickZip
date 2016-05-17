@@ -16,6 +16,7 @@ class HuffmanTree
 {
 public:
 	HuffmanTree(HuffmanVectorT _huffmanVector);
+	HuffmanTree(const char* _encodedBuffer);
 	~HuffmanTree();
 
 	HuffmanNode* SearchHuffmanTree(const char& searchPatter, std::string& code);
@@ -27,6 +28,8 @@ private:
 	HuffmanNode* entry;
 
 	HuffmanVectorT huffmanNodeStorage;
+
+	void BuildHuffmanTree(HuffmanVectorT& _huffmanVector);
 
 	HuffmanNode* SearchHuffmanTree(const char& searchPattern, HuffmanNode* entryPoint, std::string& code);
 	HuffmanNode* GetLowestWeight(HuffmanVectorT& huffmanVector);

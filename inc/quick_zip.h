@@ -33,6 +33,8 @@ public:
 
 	ByteContainer Zip(const char* _bytes, uint32_t _size);
 
+	ByteContainer Unzip(const char* _bytes, uint32_t _size);
+
 protected:
 
 private:

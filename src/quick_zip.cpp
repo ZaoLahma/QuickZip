@@ -39,6 +39,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	{
 		bitSize += 40;
 	}
+	bitSize += 8;
 
 	/*
 	 * Construct a Huffman Tree
@@ -92,6 +93,9 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
 	}
 
+	byteBuffer[byteOffset] = '\0';
+	byteOffset++;
+
 	printf("Byte offset: %d\n", byteOffset);
 
 	/*
@@ -129,6 +133,17 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	ByteContainer retVal;
 	retVal.buffer = byteBuffer;
 	retVal.size = byteSize;
+
+	return retVal;
+}
+
+ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
+{
+	HuffmanTree ht(_bytes);
+
+	ByteContainer retVal;
+	retVal.buffer = nullptr;
+	retVal.size = 0;
 
 	return retVal;
 }
