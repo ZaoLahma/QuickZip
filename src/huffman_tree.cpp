@@ -116,9 +116,10 @@ HuffmanNode* HuffmanTree::FindByteInTree(const char& byte, HuffmanNode* entryPoi
 {
 	/*
 	 * This function performs a recursive search down through the
-	 * Huffman Tree until it finds the searchPattern.
+	 * Huffman Tree until it finds the byte.
 	 *
-	 * If nothing is found, it will return an empty string.
+	 * If nothing is found, it will return an empty string as code
+	 * and a nullptr for the HuffmanNode pointer.
 	 */
 
 	if(entryPoint == nullptr)
