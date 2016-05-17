@@ -40,7 +40,6 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		bitSize += 40;
 	}
 	bitSize += 8; //For null termination
-	bitSize += 32; //For bitSize
 
 	/*
 	 * Construct a Huffman Tree
@@ -54,14 +53,12 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 */
 
 	std::string code;
-	uint32_t payloadBitSize = 0;
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
 		ht.FindByteInTreeTree(_bytes[i], code);
 		printf("%c, got code %s\n", _bytes[i], code.c_str());
 		bitSize += code.length();
-		payloadBitSize += code.length();
 	}
 
 	/*
@@ -99,14 +96,6 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 
 	byteBuffer[byteOffset] = '\0';
 	byteOffset++;
-
-	/*
-	 * Encode bitSize
-	 */
-	uint32_t* bitSizePtr = (uint32_t*)(&byteBuffer[byteOffset]);
-	*bitSizePtr = payloadBitSize;
-	byteOffset += 4;
-
 
 	printf("Byte offset: %d\n", byteOffset);
 
@@ -157,25 +146,16 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 
 	printf("Byte offset: %d, decoded size: %d\n", startByteOffset, decodedSize);
 
-	uint32_t bitSize = *(uint32_t*)(&_bytes[startByteOffset]);
-
-	printf("Bit size: %d\n", bitSize);
-
-	startByteOffset += 4;
-
-
 	/*
 	 * Decode bit array bit by bit.
 	 */
 	char* byteBuffer = new char[decodedSize];
 	uint32_t byteOffset = 0;
 	std::string code = "";
-	uint32_t noOfHandledBits = 0;
-	for(unsigned int i = startByteOffset; i < _size && noOfHandledBits != bitSize; ++i)
+	for(unsigned int i = startByteOffset; i < _size && byteOffset != decodedSize; ++i)
 	{
-		for(unsigned int n = 0; n < 8 && noOfHandledBits != bitSize; ++n)
+		for(unsigned int n = 0; n < 8 && byteOffset != decodedSize; ++n)
 		{
-			noOfHandledBits++;
 			char bit = GetBitInByte(&_bytes[i], n);
 			code += bit;
 
