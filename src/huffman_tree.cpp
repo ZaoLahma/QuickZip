@@ -107,12 +107,12 @@ HuffmanTree::~HuffmanTree()
 	huffmanNodeStorage.clear();
 }
 
-HuffmanNode* HuffmanTree::FindByteInTreeTree(const char& searchPattern, std::string& code)
+HuffmanNode* HuffmanTree::FindByteInTree(const char& byte, std::string& code)
 {
-	return SearchHuffmanTree(searchPattern, entry, code);
+	return FindByteInTree(byte, entry, code);
 }
 
-HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNode* entryPoint, std::string& code)
+HuffmanNode* HuffmanTree::FindByteInTree(const char& byte, HuffmanNode* entryPoint, std::string& code)
 {
 	/*
 	 * This function performs a recursive search down through the
@@ -131,7 +131,7 @@ HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNo
 		/*
 		 * We hit a leaf. Need to check if it contains our searchPattern.
 		 */
-		if(entryPoint->c == searchPattern)
+		if(entryPoint->c == byte)
 		{
 			return entryPoint;
 		}
@@ -146,7 +146,7 @@ HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNo
 		 * Continue searching down the tree.
 		 */
 		std::string tmpString;
-		HuffmanNode* retVal = SearchHuffmanTree(searchPattern, entryPoint->left, tmpString);
+		HuffmanNode* retVal = FindByteInTree(byte, entryPoint->left, tmpString);
 		if(nullptr != retVal)
 		{
 			code += "0";
@@ -155,7 +155,7 @@ HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNo
 		else
 		{
 			tmpString.clear();
-			retVal = SearchHuffmanTree(searchPattern, entryPoint->right, tmpString);
+			retVal = FindByteInTree(byte, entryPoint->right, tmpString);
 			if(nullptr != retVal)
 			{
 				code += "1";
@@ -166,7 +166,7 @@ HuffmanNode* HuffmanTree::SearchHuffmanTree(const char& searchPattern, HuffmanNo
 	}
 }
 
-HuffmanNode* HuffmanTree::FindByteFromBitCode(const std::string& code)
+HuffmanNode* HuffmanTree::FindByteInTreeFromBitCode(const std::string& code)
 {
 	HuffmanNode* retVal = entry;
 	for(unsigned int i = 0; i < code.length(); ++i)

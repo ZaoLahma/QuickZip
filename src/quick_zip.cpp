@@ -56,7 +56,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.FindByteInTreeTree(_bytes[i], code);
+		ht.FindByteInTree(_bytes[i], code);
 		printf("%c, got code %s\n", _bytes[i], code.c_str());
 		bitSize += code.length();
 	}
@@ -108,7 +108,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	for(unsigned int i = 0; i < _size; ++i)
 	{
 		code.clear();
-		ht.FindByteInTreeTree(_bytes[i], code);
+		ht.FindByteInTree(_bytes[i], code);
 
 		for(unsigned int n = 0; n < code.length(); ++n)
 		{
@@ -159,7 +159,7 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 			char bit = GetBitInByte(&_bytes[i], n);
 			code += bit;
 
-			HuffmanNode* node = ht.FindByteFromBitCode(code);
+			HuffmanNode* node = ht.FindByteInTreeFromBitCode(code);
 
 			if(nullptr != node)
 			{

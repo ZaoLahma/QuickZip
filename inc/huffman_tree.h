@@ -19,9 +19,9 @@ public:
 	HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset, uint32_t& decodedSize);
 	~HuffmanTree();
 
-	HuffmanNode* FindByteInTreeTree(const char& searchPattern, std::string& code);
+	HuffmanNode* FindByteInTree(const char& byte, std::string& code);
 
-	HuffmanNode* FindByteFromBitCode(const std::string& code);
+	HuffmanNode* FindByteInTreeFromBitCode(const std::string& code);
 
 protected:
 
@@ -33,7 +33,7 @@ private:
 
 	void BuildHuffmanTree(HuffmanVectorT& _huffmanVector);
 
-	HuffmanNode* SearchHuffmanTree(const char& searchPattern, HuffmanNode* entryPoint, std::string& code);
+	HuffmanNode* FindByteInTree(const char& byte, HuffmanNode* entryPoint, std::string& code);
 	HuffmanNode* GetLowestWeight(HuffmanVectorT& huffmanVector);
 };
 
