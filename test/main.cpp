@@ -35,7 +35,7 @@ int main(void)
 
 	for(uint32_t i = 0; i < byteArray.length(); ++i)
 	{
-		ASSERT_EQ(byteArray.at(i), unzipped.buffer[i])
+	ASSERT_EQ(byteArray.at(i), unzipped.buffer[i])
 	}
 
 	delete[] zipped.buffer;
@@ -47,19 +47,19 @@ int main(void)
 
 	char* fileBuffer = new char[size];
 
-    stream.seekg (0, std::ios::beg);
-    stream.read (fileBuffer, size);
-    stream.close();
+	stream.seekg (0, std::ios::beg);
+	stream.read (fileBuffer, size);
+	stream.close();
 
-    uint32_t fileSize = size;
+	uint32_t fileSize = size;
 
-    printf("Got size: %d\n", fileSize);
+	printf("Got size: %d\n", fileSize);
 
-    ByteContainer zippedFile = qz.Zip(fileBuffer, size);
+	ByteContainer zippedFile = qz.Zip(fileBuffer, size);
 
-    printf("zippedFile.size: %d\n", zippedFile.size);
+	printf("zippedFile.size: %d\n", zippedFile.size);
 
-    delete[] zippedFile.buffer;
+	delete[] zippedFile.buffer;
 
 	return 0;
 }
