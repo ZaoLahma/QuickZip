@@ -159,16 +159,16 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 			char bit = GetBitInByte(&_bytes[i], n);
 			code += bit;
 
-			HuffmanNode* node = ht.FindByteInTreeFromBitCode(code);
+			char* c = ht.FindByteInTreeFromBitCode(code);
 
-			if(nullptr != node)
+			if(nullptr != c)
 			{
 				/*
 				 * Provided code gave a match
 				 */
 				code.clear();
-				printf("Decoded: %c\n", node->c);
-				byteBuffer[byteOffset] = node->c;
+				printf("Decoded: %c\n", *c);
+				byteBuffer[byteOffset] = *c;
 				byteOffset++;
 			}
 		}

@@ -21,7 +21,7 @@ public:
 
 	HuffmanNode* FindByteInTree(const char& byte, std::string& code);
 
-	HuffmanNode* FindByteInTreeFromBitCode(const std::string& code);
+	char* FindByteInTreeFromBitCode(const std::string& code);
 
 protected:
 

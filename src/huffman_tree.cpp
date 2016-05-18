@@ -167,30 +167,30 @@ HuffmanNode* HuffmanTree::FindByteInTree(const char& byte, HuffmanNode* entryPoi
 	}
 }
 
-HuffmanNode* HuffmanTree::FindByteInTreeFromBitCode(const std::string& code)
+char* HuffmanTree::FindByteInTreeFromBitCode(const std::string& code)
 {
-	HuffmanNode* retVal = entry;
+	HuffmanNode* node = entry;
 	for(unsigned int i = 0; i < code.length(); ++i)
 	{
 		if('0' == code.at(i))
 		{
-			retVal = retVal->left;
+			node = node->left;
 		}
 		else
 		{
-			retVal = retVal->right;
+			node = node->right;
 		}
 	}
 
-	if(retVal->left != nullptr && retVal->right != nullptr)
+	if(node->left != nullptr && node->right != nullptr)
 	{
 		/*
 		 * No match for provided code. Return nullptr
 		 */
-		retVal = nullptr;
+		return nullptr;
 	}
 
-	return retVal;
+	return &node->c;
 }
 
 HuffmanNode* HuffmanTree::GetLowestWeight(HuffmanVectorT& huffmanVector)
