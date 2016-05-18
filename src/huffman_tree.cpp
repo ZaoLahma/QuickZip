@@ -18,7 +18,7 @@ HuffmanTree::HuffmanTree(HuffmanVectorT _huffmanVector)
 	entry = _huffmanVector[0];
 }
 
-HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset, uint32_t& _decodedSize)
+HuffmanTree::HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset, uint32_t& _decodedSize)
 {
 	/*
 	 * Create Huffman Tree from coded bit array.
@@ -32,7 +32,7 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset, uin
 
 	HuffmanVectorT huffmanVector;
 
-	const char* currentByte = _encoudedBuffer;
+	const char* currentByte = _encodedBuffer;
 	_byteOffset = 0;
 
 	uint8_t tableSize = *((uint8_t*)(&currentByte[_byteOffset]));
@@ -48,13 +48,13 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset, uin
 		handledBytes++;
 
 		HuffmanNode* currentNode = new HuffmanNode();
-		currentByte = &_encoudedBuffer[_byteOffset];
+		currentByte = &_encodedBuffer[_byteOffset];
 		currentNode->c = *currentByte;
 		currentNode->left = nullptr;
 		currentNode->right = nullptr;
 
 		_byteOffset++;
-		uint32_t* intPtr = (uint32_t*)(&_encoudedBuffer[_byteOffset]);
+		uint32_t* intPtr = (uint32_t*)(&_encodedBuffer[_byteOffset]);
 		currentNode->frequency = *intPtr;
 		printf("Decoded: %c with frequency: %d\n", currentNode->c, currentNode->frequency);
 		_decodedSize += currentNode->frequency;
@@ -62,7 +62,7 @@ HuffmanTree::HuffmanTree(const char* _encoudedBuffer, uint32_t& _byteOffset, uin
 		huffmanVector.push_back(currentNode);
 
 		_byteOffset += sizeof(uint32_t);
-		currentByte = &_encoudedBuffer[_byteOffset];
+		currentByte = &_encodedBuffer[_byteOffset];
 	}
 
 	huffmanNodeStorage = huffmanVector;
