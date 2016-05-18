@@ -22,13 +22,13 @@ struct ByteContainer
  * algorithm.
  *
  * Coded bit array format:
- * 0 - N bits: Table of all char (8 bits) followed by
+ * 0 - 7 bits: Table size
+ *
+ * 8 - N bits: Table of all char (8 bits) followed by
  * 			   their frequency (32 bits) used to rebuild
  * 			   Huffman Tree at decode
  *
- * N + 8 bits: Null termination to mark end of table
- *
- * N + 16 bits: Payload/coded bit array
+ * N - M bits: Payload/coded bit array
  */
 
 class QuickZip

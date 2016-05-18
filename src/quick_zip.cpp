@@ -19,7 +19,7 @@ QuickZip::QuickZip()
 
 ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 {
-	printf("Original bit size: %d\n", _size * 8);
+	printf("Original size: %d\n", _size);
 
 	/*
 	 * Get frequencies of the different bytes
@@ -31,15 +31,16 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 */
 	uint32_t bitSize = 0;
 
+	bitSize += 8; //For table size
+
 	HuffmanVectorT huffmanVector = bc.GetHuffmanNodes();
 
 	HuffmanVectorT::iterator huffIter = huffmanVector.begin();
 
 	for(; huffIter != huffmanVector.end(); ++huffIter)
 	{
-		bitSize += 40;
+		bitSize += 40; //Character 8 bits plus frequency 32 bits
 	}
-	bitSize += 8; //For null termination
 
 	/*
 	 * Construct a Huffman Tree
@@ -57,14 +58,13 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	{
 		code.clear();
 		ht.FindByteInTree(_bytes[i], code);
-		printf("%c, got code %s\n", _bytes[i], code.c_str());
+		//printf("%c, got code %s\n", _bytes[i], code.c_str());
 		bitSize += code.length();
 	}
 
 	/*
 	 * Byte align the bit size
 	 */
-	printf("Bit size: %d\n", bitSize);
 	uint32_t byteAlignedBitSize = bitSize;
 	while(byteAlignedBitSize % 8 != 0)
 	{
@@ -80,6 +80,14 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	char* byteBuffer = new char[byteSize];
 	uint32_t byteOffset = 0;
 
+	uint8_t tableSize = huffmanVector.size();
+
+	printf("Encoded table size: %d\n", tableSize);
+
+	*((uint8_t*)(&byteBuffer[byteOffset])) = tableSize;
+
+	byteOffset++;
+
 	huffIter = huffmanVector.begin();
 
 	for(; huffIter != huffmanVector.end(); ++huffIter)
@@ -93,11 +101,6 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 
 		printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
 	}
-
-	byteBuffer[byteOffset] = '\0';
-	byteOffset++;
-
-	printf("Byte offset: %d\n", byteOffset);
 
 	/*
 	 * Finally encode the byte array to a bit
@@ -129,7 +132,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		}
 	}
 
-	printf("Byte offset at end of coding: %d\n", byteOffset);
+	printf("Byte size at end of coding: %d\n", byteSize);
 
 	ByteContainer retVal;
 	retVal.buffer = byteBuffer;
@@ -144,7 +147,7 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 	uint32_t decodedSize = 0;
 	HuffmanTree ht(_bytes, startByteOffset, decodedSize);
 
-	printf("Byte offset: %d, decoded size: %d\n", startByteOffset, decodedSize);
+	printf("Decoded size: %d\n", decodedSize);
 
 	/*
 	 * Decode bit array bit by bit.
@@ -167,7 +170,7 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 				 * Provided code gave a match
 				 */
 				code.clear();
-				printf("Decoded: %c\n", *c);
+				//printf("Decoded: %c\n", *c);
 				byteBuffer[byteOffset] = *c;
 				byteOffset++;
 			}
@@ -182,7 +185,7 @@ ByteContainer QuickZip::Unzip(const char* _bytes, uint32_t _size)
 
 void QuickZip::SetBitInByte(char* _byteBuffer, uint32_t _bitNo, uint32_t _val)
 {
-	printf("Setting bit: %d in %p to: %d\n", _bitNo, _byteBuffer, _val);
+	//printf("Setting bit: %d in %p to: %d\n", _bitNo, _byteBuffer, _val);
 
 	uint8_t* intPtr = (uint8_t*)(_byteBuffer);
 	*intPtr |= _val << _bitNo;
