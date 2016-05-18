@@ -9,6 +9,7 @@
 #include "quick_zip.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #define ASSERT_EQ(_this, _that) \
 if(_this != _that) \
@@ -26,7 +27,7 @@ int main(void)
 	QuickZip qz;
 	ByteContainer zipped = qz.Zip(byteArray.c_str(), byteArray.length());
 
-	ASSERT_EQ(38, zipped.size);
+	ASSERT_EQ(39, zipped.size);
 
 	ByteContainer unzipped = qz.Unzip(zipped.buffer, zipped.size);
 
@@ -39,6 +40,26 @@ int main(void)
 
 	delete[] zipped.buffer;
 	delete[] unzipped.buffer;
+
+	std::streampos size;
+	std::ifstream stream("./src/quick_zip.cpp", std::ios::in | std::ios::binary | std::ios::ate);
+	size = stream.tellg();
+
+	char* fileBuffer = new char[size];
+
+    stream.seekg (0, std::ios::beg);
+    stream.read (fileBuffer, size);
+    stream.close();
+
+    uint32_t fileSize = size;
+
+    printf("Got size: %d\n", fileSize);
+
+    ByteContainer zippedFile = qz.Zip(fileBuffer, size);
+
+    printf("zippedFile.size: %d\n", zippedFile.size);
+
+    delete[] zippedFile.buffer;
 
 	return 0;
 }

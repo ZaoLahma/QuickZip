@@ -31,7 +31,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 */
 	uint32_t bitSize = 0;
 
-	bitSize += 8; //For table size
+	bitSize += 16; //For table size
 
 	HuffmanVectorT huffmanVector = bc.GetHuffmanNodes();
 
@@ -78,13 +78,13 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 * bit table
 	 */
 	char* byteBuffer = new char[byteSize];
-	uint32_t byteOffset = 0;
+	uint32_t byteOffset = 1;
 
-	uint8_t tableSize = huffmanVector.size();
+	uint16_t tableSize = huffmanVector.size();
 
 	printf("Encoded table size: %d\n", tableSize);
 
-	*((uint8_t*)(&byteBuffer[byteOffset])) = tableSize;
+	*((uint16_t*)(&byteBuffer[byteOffset])) = tableSize;
 
 	byteOffset++;
 
