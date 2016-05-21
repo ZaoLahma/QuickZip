@@ -59,7 +59,10 @@ int main(void)
 
 	printf("zippedFile.size: %d\n", zippedFile.size);
 
+	ByteContainer unzippedFile = qz.Unzip(zippedFile.buffer, zippedFile.size);
+
 	delete[] zippedFile.buffer;
+	delete[] unzippedFile.buffer;
 
 	return 0;
 }
