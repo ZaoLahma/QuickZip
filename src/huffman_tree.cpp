@@ -33,15 +33,15 @@ HuffmanTree::HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset, uint
 	HuffmanVectorT huffmanVector;
 
 	const char* currentByte = _encodedBuffer;
-	_byteOffset = 1;
+	_byteOffset = 0;
 
-	uint16_t tableSize = *((uint8_t*)(&currentByte[_byteOffset]));
+	uint16_t tableSize = *((uint16_t*)(&currentByte[_byteOffset]));
 
 	printf("Decoded table size: %d\n", tableSize);
 
-	_byteOffset++;
+	_byteOffset += 2;
 
-	uint8_t handledBytes = 0;
+	uint16_t handledBytes = 0;
 
 	while(handledBytes < tableSize)
 	{

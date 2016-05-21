@@ -78,27 +78,26 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 	 * bit table
 	 */
 	char* byteBuffer = new char[byteSize];
-	uint32_t byteOffset = 1;
+	memset(byteBuffer, 0x0, byteSize);
+	uint32_t byteOffset = 0;
 
-	uint16_t tableSize = huffmanVector.size();
+	uint16_t* tableSize = ((uint16_t*)(&byteBuffer[0]));
 
-	printf("Encoded table size: %d\n", tableSize);
+	*tableSize = huffmanVector.size();
 
-	*((uint16_t*)(&byteBuffer[byteOffset])) = tableSize;
-
-	byteOffset++;
+	printf("Encoded table size: %d\n", *tableSize);
 
 	huffIter = huffmanVector.begin();
+
+	byteOffset += 2;
 
 	for(; huffIter != huffmanVector.end(); ++huffIter)
 	{
 		byteBuffer[byteOffset] = (*huffIter)->c;
 		byteOffset++;
-
 		uint32_t* frequency = (uint32_t*)(&byteBuffer[byteOffset]);
 		*frequency = (*huffIter)->frequency;
 		byteOffset += sizeof(uint32_t);
-
 		printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
 	}
 
