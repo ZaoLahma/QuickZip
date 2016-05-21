@@ -23,6 +23,4 @@ struct HuffmanNode
 
 typedef std::vector<HuffmanNode*> HuffmanVectorT;
 
-typedef std::map<char, uint32_t> ByteOccurancesT;
-
 #endif /* INC_QUICK_ZIP_TYPES_H_ */

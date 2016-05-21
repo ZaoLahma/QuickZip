@@ -16,17 +16,12 @@ class ByteCounter
 public:
 	ByteCounter(const char* _bytes, uint32_t _size);
 
-	ByteOccurancesT& GetByteMap();
-
 	HuffmanVectorT GetHuffmanNodes();
 
 protected:
 
 private:
-	const char* bytes;
-	uint32_t size;
-
-	ByteOccurancesT byteMap;
+	HuffmanNode huffmanArray[256];
 };
 
 

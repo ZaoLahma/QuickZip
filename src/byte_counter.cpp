@@ -7,47 +7,37 @@
 
 #include "byte_counter.h"
 
-ByteCounter::ByteCounter(const char* _bytes, uint32_t _size) :
-bytes(_bytes),
-size(_size)
+ByteCounter::ByteCounter(const char* _bytes, uint32_t _size)
 {
-	ByteOccurancesT::iterator byteIter;
-
-	for(uint32_t i = 0; i < size; ++i)
+	for(uint32_t i = 0; i < 256; ++i)
 	{
-		byteIter = byteMap.find(bytes[i]);
-
-		if(byteMap.end() == byteIter)
-		{
-			byteMap[bytes[i]] = 1;
-		}
-		else
-		{
-			byteIter->second++;
-		}
+		huffmanArray[i].c = i;
+		huffmanArray[i].code = "";
+		huffmanArray[i].frequency = 0;
+		huffmanArray[i].left = nullptr;
+		huffmanArray[i].right = nullptr;
 	}
 
-	byteIter = byteMap.begin();
-}
+	for(uint32_t i = 0; i < _size; ++i)
+	{
+		uint8_t index(_bytes[i]);
 
-ByteOccurancesT& ByteCounter::GetByteMap()
-{
-	return byteMap;
+		huffmanArray[index].frequency++;
+	}
 }
 
 HuffmanVectorT ByteCounter::GetHuffmanNodes()
 {
 	HuffmanVectorT huffmanVector;
 
-	ByteOccurancesT::iterator byteIter = byteMap.begin();
-	for( ; byteIter != byteMap.end(); ++byteIter)
+	for(uint32_t i = 0 ; i < 256; ++i)
 	{
-		HuffmanNode* newEntry = new HuffmanNode();
-		newEntry->c = byteIter->first;
-		newEntry->frequency = byteIter->second;
-		newEntry->right = nullptr;
-		newEntry->left = nullptr;
-		huffmanVector.push_back(newEntry);
+		if(huffmanArray[i].frequency != 0)
+		{
+			HuffmanNode* newEntry = new HuffmanNode();
+			*newEntry = huffmanArray[i];
+			huffmanVector.push_back(newEntry);
+		}
 	}
 
 	return huffmanVector;
