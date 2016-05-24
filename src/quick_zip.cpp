@@ -99,7 +99,7 @@ ByteContainer QuickZip::Zip(const char* _bytes, uint32_t _size)
 		uint32_t* frequency = (uint32_t*)(&byteBuffer[byteOffset]);
 		*frequency = (*huffIter)->frequency;
 		byteOffset += sizeof(uint32_t);
-		printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
+		//printf("Encoded %c with frequency: %d\n",  (*huffIter)->c, *frequency);
 	}
 
 	/*

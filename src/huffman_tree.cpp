@@ -56,7 +56,7 @@ HuffmanTree::HuffmanTree(const char* _encodedBuffer, uint32_t& _byteOffset, uint
 		_byteOffset++;
 		uint32_t* intPtr = (uint32_t*)(&_encodedBuffer[_byteOffset]);
 		currentNode->frequency = *intPtr;
-		printf("Decoded: %c with frequency: %d\n", currentNode->c, currentNode->frequency);
+		//printf("Decoded: %c with frequency: %d\n", currentNode->c, currentNode->frequency);
 		_decodedSize += currentNode->frequency;
 
 		huffmanVector.push_back(currentNode);

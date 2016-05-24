@@ -18,7 +18,7 @@ if(_this != _that) \
 	return 1; \
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
 	std::string byteArray = "eebbeecdebeeebecceeeddebbbeceedebeeddeeeecceeeedeeedeeebeedeceedebeeedeceeedebee";
 
@@ -41,8 +41,13 @@ int main(void)
 	delete[] zipped.buffer;
 	delete[] unzipped.buffer;
 
+	if(argc == 0)
+	{
+		return 0;
+	}
+
 	std::streampos size;
-	std::ifstream stream("./src/quick_zip.cpp", std::ios::in | std::ios::binary | std::ios::ate);
+	std::ifstream stream(argv[1], std::ios::in | std::ios::binary | std::ios::ate);
 	size = stream.tellg();
 
 	char* fileBuffer = new char[size];
