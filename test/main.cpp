@@ -61,6 +61,11 @@ int main(void)
 
 	ByteContainer unzippedFile = qz.Unzip(zippedFile.buffer, zippedFile.size);
 
+	for(uint32_t i = 0; i < byteArray.length(); ++i)
+	{
+		ASSERT_EQ(fileBuffer[i], unzippedFile.buffer[i])
+	}
+
 	delete[] zippedFile.buffer;
 	delete[] unzippedFile.buffer;
 
